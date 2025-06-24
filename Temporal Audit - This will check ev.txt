@@ -1,0 +1,11 @@
+Temporal Audit - This will check evry wallet to see which event has raised and how many of what. then send all of this info to the rate limit managger
+Rate Limit Manager - This one calculates time and sends off - which agent and who doing wat - how long to take - new agent if + more 15mins - with every incoming request 
+
+RLM BRO dude will go thank you for the wallet list okay I take and give to my super spies - lets so who has space - MEE MEEE said phantom okey you can have 2 5 sec ones cos theyre r loads of dem. WHO NEXT  - I SEE YOU ARE ALL FULL YOU USELESS MONKEYS I MAKE NEW CAPTAIN AMERICA SUPER SOLDIER - he has 500 free you lazy bums. OKAY GET TO WORK. ELLO MR temporal audit ceo boss sir - how many customers you got for me - okey I do gogo do the tasks - how much time we have to spare my minions?
+
+
+EVERY 15 MINS IN 5 BATCHES.
+
+FIVE MINIONS - 15 MINS. EVERY 3 MIN WE ASK ONE MINION. 
+
+WHEN ENTRY IS MADE IN DATABASE - START CONSIDERING AS A GIFT AGENT - NEW GUY AT WORK TODAY. 

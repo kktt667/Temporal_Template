@@ -1,0 +1,29 @@
+{
+  "name": "wallet-temporal-processor",
+  "version": "1.0.0",
+  "description": "Temporal workflow for processing wallet data with 1:1 worker-to-activity relationship",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "worker": "node workers/wallet-worker.js",
+
+    "scheduler:start": "node client/scheduled-wallet-client.js start",
+    "scheduler:scale": "node client/scheduled-wallet-client.js scale",
+    "scheduler:status": "node client/scheduled-wallet-client.js status",
+    "scheduler:pause": "node client/scheduled-wallet-client.js pause",
+    "scheduler:resume": "node client/scheduled-wallet-client.js resume",
+    "scheduler:trigger": "node client/scheduled-wallet-client.js trigger",
+    "scheduler:stop": "node client/scheduled-wallet-client.js stop",
+    "scheduler:list": "node client/scheduled-wallet-client.js list"
+  },
+  "dependencies": {
+    "@temporalio/client": "^1.8.0",
+    "@temporalio/worker": "^1.8.0",
+    "@temporalio/workflow": "^1.8.0",
+    "@temporalio/activity": "^1.8.0",
+    "sqlite3": "^5.1.6"
+  },
+  "keywords": ["temporal", "workflow", "wallet", "processing", "scalable"],
+  "author": "",
+  "license": "MIT"
+} 
