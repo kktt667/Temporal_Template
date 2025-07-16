@@ -21,13 +21,16 @@
     "test:redis": "node test-redis-queue.js",
     "queue:stats": "node services/queue-monitor.js",
     
-    "rate-limit:worker": "node workers/rate-limit-worker.js",
-    "rate-limit:start": "node client/rate-limit-client.js start",
-    "rate-limit:status": "node client/rate-limit-client.js status",
-    "rate-limit:stop": "node client/rate-limit-client.js stop",
-    "rate-limit:result": "node client/rate-limit-client.js result",
-    "rate-limit:list": "node client/rate-limit-client.js list",
-    "rate-limit:system": "node start-rate-limit-system.js"
+    "rlm:start": "node client/rlm-client.js start",
+    "rlm:status": "node client/rlm-client.js status",
+    "rlm:result": "node client/rlm-client.js result",
+    "rlm:cancel": "node client/rlm-client.js cancel",
+    "rlm:list": "node client/rlm-client.js list",
+    "rlm:worker": "node workers/rlm-worker.js",
+    "rlm:worker:start": "node workers/rlm-worker.js rlm-worker-1",
+    "test:rlm": "node test-rlm-system.js",
+    "test:rlm:redis": "node test-rlm-redis.js",
+    "add:test:events": "node add-test-events.js"
   },
   "dependencies": {
     "@temporalio/client": "^1.8.0",

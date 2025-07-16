@@ -9,10 +9,9 @@ const { promisify } = require('util');
 const execAsync = promisify(exec);
 
 class TemporalWorkerManager {
-    constructor(workerType = 'wallet') {
+    constructor() {
         this.workers = new Map(); // Map of workerId -> { process, worker }
-        this.workerType = workerType; // 'wallet' or 'rate-limit'
-        this.workerPidFile = path.join(__dirname, `../.temporal-${workerType}-worker-pids.json`);
+        this.workerPidFile = path.join(__dirname, '../.temporal-worker-pids.json');
         this.loadWorkerPids();
     }
 
@@ -53,13 +52,12 @@ class TemporalWorkerManager {
                     
                     try {
                         const { stdout: cmdline } = await execAsync(`wmic process where "ProcessId=${pid}" get CommandLine /format:list`);
-                        const workerScript = this.workerType === 'rate-limit' ? 'rate-limit-worker.js' : 'wallet-worker.js';
-                        if (cmdline.includes(workerScript)) {
-                            const match = cmdline.match(new RegExp(`${workerScript}\\s+(\\d+)`));
+                        if (cmdline.includes('wallet-worker.js')) {
+                            const match = cmdline.match(/wallet-worker\.js\s+(\d+)/);
                             if (match) {
                                 const workerId = parseInt(match[1]);
                                 existingWorkers.push({ workerId, pid });
-                                console.log(`  Found ${this.workerType} Worker ${workerId}: PID ${pid}`);
+                                console.log(`  Found Temporal Worker ${workerId}: PID ${pid}`);
                             }
                         }
                     } catch (error) {
@@ -139,11 +137,9 @@ class TemporalWorkerManager {
     }
 
     async startWorker(workerId) {
-        console.log(`  Starting ${this.workerType} Worker ${workerId}...`);
+        console.log(`  Starting Temporal Worker ${workerId}...`);
         
-        // Start appropriate worker based on type
-        const workerScript = this.workerType === 'rate-limit' ? 'rate-limit-worker.js' : 'wallet-worker.js';
-        const worker = spawn('node', [`workers/${workerScript}`, workerId.toString()], {
+        const worker = spawn('node', ['workers/wallet-worker.js', workerId.toString()], {
             stdio: 'pipe',
             shell: true,
             detached: false
