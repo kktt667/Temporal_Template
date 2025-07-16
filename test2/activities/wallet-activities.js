@@ -1,10 +1,17 @@
 const sqlite3 = require('sqlite3').verbose();
+const { redisQueueService } = require('../services/redis-queue');
 
 /**
  * Activity to process a range of wallets and add events to queue
  */
 async function processWalletRange(startWallet, endWallet, workerId = 'unknown') {
     console.log(`[Worker ${workerId}] Processing wallets ${startWallet} to ${endWallet}`);
+    
+    // Connect to Redis queue
+    const queueConnected = await redisQueueService.connect();
+    if (!queueConnected) {
+        console.warn(`⚠️  [Worker ${workerId}] Redis not available, will use fallback logging`);
+    }
     
     // Connect to the database
     const db = new sqlite3.Database('./database/wallet_data.db');
@@ -28,7 +35,7 @@ async function processWalletRange(startWallet, endWallet, workerId = 'unknown') 
         
         console.log(`[Worker ${workerId}] Found ${events.length} wallets with events in range ${startWallet}-${endWallet}`);
         
-        // Add events to queue (in a real scenario, this would be a message queue)
+        // Add events to Redis queue
         await addEventsToQueue(events, workerId);
         
         return {
@@ -36,11 +43,13 @@ async function processWalletRange(startWallet, endWallet, workerId = 'unknown') 
             range: `${startWallet}-${endWallet}`,
             walletsProcessed: wallets.length,
             eventsFound: events.length,
-            events: events
+            events: events,
+            queueConnected: queueConnected
         };
         
     } finally {
         db.close();
+        // Don't disconnect Redis here as it might be used by other workers
     }
 }
 
@@ -100,15 +109,34 @@ function checkWalletForEvents(wallet) {
  * Add events to the processing queue
  */
 async function addEventsToQueue(events, workerId) {
-    // In a real implementation, this would add to a message queue (RabbitMQ, SQS, etc.)
-    // For now, we'll just log the events
-    console.log(`[Worker ${workerId}] Adding events to queue:`);
-    events.forEach(event => {
-        console.log(`  [Worker ${workerId}] Wallet: ${event.wallet_name}, Events: [${event.events.join(', ')}]`);
-    });
-    
-    // Simulate some processing time
-    await new Promise(resolve => setTimeout(resolve, 100));
+    if (events.length === 0) {
+        console.log(`[Worker ${workerId}] No events to add to queue`);
+        return;
+    }
+
+    try {
+        // Use Redis queue service to add events
+        const success = await redisQueueService.addEventsToQueue(events, workerId);
+        
+        if (success) {
+            console.log(`✅ [Worker ${workerId}] Successfully added ${events.length} events to Redis queue`);
+        } else {
+            // Fallback to logging if Redis fails
+            console.log(`[Worker ${workerId}] Adding events to queue (fallback logging):`);
+            events.forEach(event => {
+                console.log(`  [Worker ${workerId}] Wallet: ${event.wallet_name}, Events: [${event.events.join(', ')}]`);
+            });
+        }
+        
+    } catch (error) {
+        console.error(`❌ [Worker ${workerId}] Failed to add events to queue:`, error);
+        
+        // Fallback to logging
+        console.log(`[Worker ${workerId}] Adding events to queue (fallback logging):`);
+        events.forEach(event => {
+            console.log(`  [Worker ${workerId}] Wallet: ${event.wallet_name}, Events: [${event.events.join(', ')}]`);
+        });
+    }
 }
 
 module.exports = {

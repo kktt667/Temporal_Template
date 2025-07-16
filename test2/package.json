@@ -14,14 +14,28 @@
     "scheduler:resume": "node client/scheduled-wallet-client.js resume",
     "scheduler:trigger": "node client/scheduled-wallet-client.js trigger",
     "scheduler:stop": "node client/scheduled-wallet-client.js stop",
-    "scheduler:list": "node client/scheduled-wallet-client.js list"
+    "scheduler:list": "node client/scheduled-wallet-client.js list",
+
+    "queue:monitor": "node services/queue-monitor.js",
+    "queue:clear": "node services/queue-clear.js",
+    "test:redis": "node test-redis-queue.js",
+    "queue:stats": "node services/queue-monitor.js",
+    
+    "rate-limit:worker": "node workers/rate-limit-worker.js",
+    "rate-limit:start": "node client/rate-limit-client.js start",
+    "rate-limit:status": "node client/rate-limit-client.js status",
+    "rate-limit:stop": "node client/rate-limit-client.js stop",
+    "rate-limit:result": "node client/rate-limit-client.js result",
+    "rate-limit:list": "node client/rate-limit-client.js list",
+    "rate-limit:system": "node start-rate-limit-system.js"
   },
   "dependencies": {
     "@temporalio/client": "^1.8.0",
     "@temporalio/worker": "^1.8.0",
     "@temporalio/workflow": "^1.8.0",
     "@temporalio/activity": "^1.8.0",
-    "sqlite3": "^5.1.6"
+    "sqlite3": "^5.1.6",
+    "redis": "^4.6.12"
   },
   "keywords": ["temporal", "workflow", "wallet", "processing", "scalable"],
   "author": "",
