@@ -1,0 +1,36 @@
+{
+  "name": "wallet-temporal-processor",
+  "version": "1.0.0",
+  "description": "Temporal workflow for processing wallet data with 1:1 worker-to-activity relationship",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "worker": "node wallet-audit/workers/wallet-worker.js",
+
+    "scheduler:start": "node wallet-audit/client/scheduled-wallet-client.js start",
+    "scheduler:scale": "node wallet-audit/client/scheduled-wallet-client.js scale",
+    "scheduler:status": "node wallet-audit/client/scheduled-wallet-client.js status",
+    "scheduler:pause": "node wallet-audit/client/scheduled-wallet-client.js pause",
+    "scheduler:resume": "node wallet-audit/client/scheduled-wallet-client.js resume",
+    "scheduler:trigger": "node wallet-audit/client/scheduled-wallet-client.js trigger",
+    "scheduler:stop": "node wallet-audit/client/scheduled-wallet-client.js stop",
+    "scheduler:list": "node wallet-audit/client/scheduled-wallet-client.js list",
+
+    "queue:monitor": "node wallet-audit/services/queue-monitor.js",
+    "queue:clear": "node wallet-audit/services/queue-clear.js",
+    "queue:stats": "node wallet-audit/services/queue-monitor.js stats",
+    
+    "worker:manager": "node wallet-audit/scripts/temporal-worker-manager.js"
+  },
+  "dependencies": {
+    "@temporalio/client": "^1.8.0",
+    "@temporalio/worker": "^1.8.0",
+    "@temporalio/workflow": "^1.8.0",
+    "@temporalio/activity": "^1.8.0",
+    "sqlite3": "^5.1.6",
+    "redis": "^4.6.12"
+  },
+  "keywords": ["temporal", "workflow", "wallet", "processing", "scalable"],
+  "author": "",
+  "license": "MIT"
+} 
